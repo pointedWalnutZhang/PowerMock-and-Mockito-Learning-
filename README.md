@@ -67,6 +67,8 @@
         public MockitoRule rule = MockitoJUnit.rule();
         这个方法会调用validateMockitoUsage方法。这个方法有一些好处，具体什么好处还不太清楚。
     
+# mock Exception
+    PowerMockito.when(objectMapper.readValue(TEST_STRING1, Map.class)).thenThrow(IOException.class);
         
         
         
