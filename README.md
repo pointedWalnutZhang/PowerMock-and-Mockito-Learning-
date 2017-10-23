@@ -69,6 +69,41 @@
     
 # mock Exception
     PowerMockito.when(objectMapper.readValue(TEST_STRING1, Map.class)).thenThrow(IOException.class);
-        
-        
-        
+# 模拟private函数和局部模拟
+    参考https://www.ibm.com/developerworks/cn/java/j-lo-powermock/
+## 模拟私有以及 Final 方法
+   局部模拟则提供了另外一种方式，在使用局部模拟时，被创建出来的模拟对象依然是原系统对象，虽然可以使用方法 When().thenReturn()来指定某些具体方法的  返回值，但是没有被用此函数修改过的函数依然按照系统原始类的方式来执行。这种局部模拟的方式的强大之处在于，除开一般方法可以使用之外，Final 方法和私有方法一样可以使用。
+### 被测试代码
+    public final class PrivatePartialMockingExample { 
+        public String methodToTest() { 
+            return methodToMock("input"); 
+        } 
+        private String methodToMock(String input) { 
+            return "REAL VALUE = " + input; 
+        } 
+    }
+### 局部模拟方法实现
+    @RunWith(PowerMockRunner.class) 
+    @PrepareForTest(PrivatePartialMockingExample.class) 
+    public class PrivatePartialMockingExampleTest { 
+    @Test 
+        public void demoPrivateMethodMocking() throws Exception { 
+            final String expected = "TEST VALUE"; 
+            final String nameOfMethodToMock = "methodToMock"; 
+            final String input = "input"; 
+            PrivatePartialMockingExample underTest = spy(new PrivatePartialMockingExample()); 
+ 
+            /* 
+            * Setup the expectation to the private method using the method name 
+            */ 
+            when(underTest, nameOfMethodToMock, input).thenReturn(expected); 
+
+            assertEquals(expected, underTest.methodToTest()); 
+
+            // Optionally verify that the private method was actually called 
+            verifyPrivate(underTest).invoke(nameOfMethodToMock, input); 
+       } 
+    }
+   可以发现，为了实现局部模拟操作，用来创建模拟对象的函数从 mock() 变成了 spy()，操作对象也从类本身变成了一个具体的对象。同时，When() 函数也使用了不同的版本：在模拟私有方法或者是 Final 方法时，When() 函数需要依次指定模拟对象、被指定的函数名字以及针对该函数的输入参数列表。
+   powermock 官方文档 https://github.com/powermock/powermock
+   mockito 官方文档 https://github.com/mockito/mockito
