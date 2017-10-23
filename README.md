@@ -105,5 +105,5 @@
        } 
     }
    可以发现，为了实现局部模拟操作，用来创建模拟对象的函数从 mock() 变成了 spy()，操作对象也从类本身变成了一个具体的对象。同时，When() 函数也使用了不同的版本：在模拟私有方法或者是 Final 方法时，When() 函数需要依次指定模拟对象、被指定的函数名字以及针对该函数的输入参数列表。
-    powermock 官方文档 https://github.com/powermock/powermock
-    mockito 官方文档 https://github.com/mockito/mockito
+### powermock 官方文档 https://github.com/powermock/powermock
+### mockito 官方文档 https://github.com/mockito/mockito
